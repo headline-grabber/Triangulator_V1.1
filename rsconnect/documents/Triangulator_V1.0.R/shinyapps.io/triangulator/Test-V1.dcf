@@ -1,0 +1,13 @@
+name: Test-V1
+title: Test-V1
+username: triangulator
+account: triangulator
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 13549225
+bundleId: 9480623
+url: https://triangulator.shinyapps.io/Test-V1/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: install.packages.R|LICENSE|README.md
