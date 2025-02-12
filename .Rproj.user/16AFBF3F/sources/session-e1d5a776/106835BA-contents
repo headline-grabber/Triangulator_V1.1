@@ -11,7 +11,7 @@ ui <- fluidPage(
   # --------------------------------------------------------------------
   tabsetPanel(
     id = "main_tabs",
-  # --------------------------------------------------------------------
+    # --------------------------------------------------------------------
     tabPanel("Import",
              div(style = position_style,
                  fluidRow(uiOutput("ui_0")),                                    #TITLE - step 1, and line-by-line upload 
@@ -51,23 +51,22 @@ ui <- fluidPage(
                    column(10,
                           uiOutput("ui_4e_right_button"),
                           uiOutput("ui_4e_right"),                                           #explore input
-                   uiOutput("ui_6a"),                                           #explore month output
-                   uiOutput("ui_6b"),                                           #explore claim input
-                   uiOutput("ui_7a")                                            #explore claim output
+                          uiOutput("ui_6a"),                                           #explore month output
+                          uiOutput("ui_6b"),                                           #explore claim input
+                          uiOutput("ui_7a")                                            #explore claim output
                    )),
                  uiOutput("conditional_line_5"),
-                 fluidRow(
-                   column(2,uiOutput("duration_left")),                                           #dropdowns for triangles
-                   column(10,
-                 uiOutput("duration_right"))),
-                 uiOutput("conditional_line_6"),
+                 #fluidRow(
+                 #   column(2,uiOutput("duration_left")),                                           #dropdowns for triangles
+                 #   column(10,uiOutput("duration_right"))),
+                 # uiOutput("conditional_line_6"),
                  fluidRow(
                    column(2,uiOutput("initial_projections_left")),                                           #dropdowns for triangles
                    column(10,
                           uiOutput("initial_projections_right"))),
                  uiOutput("conditional_line_7")
-              )),
-  #--------------------------------------------------------
+             )),
+    #--------------------------------------------------------
   ) # end of tabset panel
   #--------------------------------------------------------
 ) # end of UI
@@ -100,83 +99,85 @@ server <- function(input, output, session) {
   # --- (UI_0) upload interface for line-by-line claims
   output$ui_0 <- renderUI({
     tagList(
-            tags$hr(style = line_style),
-            tags$h3("Step 1: Upload Claims", style = title_style2), 
-            tags$h6("Link up your line-by-line Claims database.", style = title_style3),
-            div(style = centre_output_style2,fileInput("file",label = "", accept = c(".xlsx", ".xls"))))
-            })
+      tags$hr(style = line_style),
+      tags$h3("Step 1: Upload Claims", style = title_style2), 
+      tags$h6("Link up your line-by-line Claims database.", style = title_style3),
+      div(style = centre_output_style2,fileInput("file",label = "", accept = c(".xlsx", ".xls"))))
+  })
   
   
   # --- (UI_1) conditional UI once dataset uploaded
   observeEvent(user_claims_database(), {
     
     output$column_select_ui <- renderUI({
-        df <- user_claims_database()
-        tagList(
-          div(style = blue_box,  
-              fluidRow(
-                column(6, selectInput("user_policy_id", "Policy Id:", choices = colnames(df))),
-                column(6, selectInput("user_claim_id", "Claim Id:", choices = colnames(df)))),
-              fluidRow(column(8, offset = 2, selectInput("user_groupings", "Groupings:", choices = colnames(df), multiple = TRUE))),
-              fluidRow(
-                column(6, selectInput("user_date_incident", "Incident Date:", choices = colnames(df))),
-                column(6, selectInput("user_date_stamp", "Observation Date:", choices = colnames(df)))),
-              fluidRow(
-                column(6, selectInput("user_date_issue", "Policy Issue Date:", choices = colnames(df))),
-                column(6, selectInput("user_date_reported", "Report Date:", choices = colnames(df)))),
-              fluidRow(
-                column(6, selectInput("user_paid", "Paid Claims:", choices = colnames(df))),
-                column(6, selectInput("user_case", "Case Estimates:", selected = NULL, choices = colnames(df))))
+      df <- user_claims_database()
+      tagList(
+        div(style = blue_box,  
+            fluidRow(
+              column(6, selectInput("user_policy_id", "Policy Id:", choices = colnames(df))),
+              column(6, selectInput("user_claim_id", "Claim Id:", choices = colnames(df)))),
+            fluidRow(column(8, offset = 2, selectInput("user_groupings", "Groupings:", choices = colnames(df), multiple = TRUE))),
+            fluidRow(
+              column(6, selectInput("user_date_incident", "Incident Date:", choices = colnames(df))),
+              column(6, selectInput("user_date_stamp", "Observation Date:", choices = colnames(df)))),
+            fluidRow(
+              column(6, selectInput("user_date_issue", "Policy Issue Date:", choices = colnames(df))),
+              column(6, selectInput("user_date_reported", "Report Date:", choices = colnames(df)))),
+            fluidRow(
+              column(6, selectInput("user_paid", "Paid Claims:", choices = colnames(df))),
+              column(6, selectInput("user_case", "Case Estimates:", selected = NULL, choices = colnames(df))))
         ))})
-        
+    
+    head_data <- head(user_claims_database())
+
     output$ui_1a <- renderUI({
-        tagList(
-          div(style = centre_output_style, checkboxInput("ui_1a_button", label = "Show Data:", value = FALSE)),
-          conditionalPanel(condition = "input.ui_1a_button == true",div(style = datatable_style, renderTable({head(user_claims_database())}))),
-          tags$hr(style = line_style),
-          tags$h3("Step 2: Define Variables", style = title_style2),
-          tags$h6("You need to map the variable names in your database to the variable that Triangulator is expecting.", style = title_style3),
-          div(style = centre_output_style, checkboxInput("ui_1_input_toggle_button", label = "First time selecting variables?", value = FALSE)) 
-        )})
-      
-      output$ui_1b <- renderUI({
-        tagList(
-          div(id = "ui_1b",
-          h3("Import Selections"),
-          tags$h6("Import pre-made variables file:", style = title_style3),
-          div(style = centre_output_style, fileInput("variable_selections", label = "", accept = c(".csv")))
+      tagList(
+        div(style = centre_output_style, checkboxInput("ui_1a_button", label = "Show Data:", value = FALSE)),
+        conditionalPanel(condition = "input.ui_1a_button == true",div(style = datatable_style, renderTable({head_data}))),
+        tags$hr(style = line_style),
+        tags$h3("Step 2: Define Variables", style = title_style2),
+        tags$h6("You need to map the variable names in your database to the variable that Triangulator is expecting.", style = title_style3),
+        div(style = centre_output_style, checkboxInput("ui_1_input_toggle_button", label = "First time selecting variables?", value = FALSE)) 
+      )})
+    
+    output$ui_1b <- renderUI({
+      tagList(
+        div(id = "ui_1b",
+            h3("Import Selections"),
+            tags$h6("Import pre-made variables file:", style = title_style3),
+            div(style = centre_output_style, fileInput("variable_selections", label = "", accept = c(".csv")))
         ))})
-      
-      output$ui_1c <- renderUI({
-        tagList(
-          div(id = "ui_1c", # Assign a unique ID here
+    
+    output$ui_1c <- renderUI({
+      tagList(
+        div(id = "ui_1c", # Assign a unique ID here
             h3("Manual Selections"),
             tags$h6("Manually select variable names", style = title_style3),
             tags$h6("Note: download the variables file so you can re-use this via the import option:", style = title_style3),
             div(style = centre_output_style, uiOutput("column_select_ui"))
-          ))})
-      
-      output$ui_1e <- renderUI({
-        tagList(
-          div(style = centre_output_style,h3("Assigned Selections")),
-          tags$h6("These are your selected variable names.", style = title_style3),
-          div(style = green_box,verbatimTextOutput("assigned_variables"))
-        )})
-      
-      output$ui_1d <- renderUI({div(style = centre_output_style,actionButton("assign_variables", label = "Assign Variables", style = button_style))})
-      
-      output$conditional_line_a <- renderUI({tagList(tags$hr(style = line_style))})
-      
-      shinyjs::runjs("setTimeout(() => shinyjs.scrollToBottom(), 300);")
-    })
+        ))})
+    
+    output$ui_1e <- renderUI({
+      tagList(
+        div(style = centre_output_style,h3("Assigned Selections")),
+        tags$h6("These are your selected variable names.", style = title_style3),
+        div(style = green_box,verbatimTextOutput("assigned_variables"))
+      )})
+    
+    output$ui_1d <- renderUI({div(style = centre_output_style,actionButton("assign_variables", label = "Assign Variables", style = button_style))})
+    
+    output$conditional_line_a <- renderUI({tagList(tags$hr(style = line_style))})
+    
+    shinyjs::runjs("setTimeout(() => shinyjs.scrollToBottom(), 300);")
+  })
   
-
+  
   
   # --- (UI_2) conditional UI once you click assign variables
   observeEvent(input$assign_variables, {
-      inputs_check <- c(input$user_policy_id,input$user_claim_id,input$user_groupings,input$user_date_incident,input$user_date_stamp,input$user_date_issue,input$user_date_reported,input$user_paid,input$user_case)
-      if (length(inputs_check) != length(unique(inputs_check))) {shinyalert(title = "Warning", text = "Inputs must have unique values.", type = "info", confirmButtonText = "Understood",size = "l")
-      } else {
+    inputs_check <- c(input$user_policy_id,input$user_claim_id,input$user_groupings,input$user_date_incident,input$user_date_stamp,input$user_date_issue,input$user_date_reported,input$user_paid,input$user_case)
+    if (length(inputs_check) != length(unique(inputs_check))) {shinyalert(title = "Warning", text = "Inputs must have unique values.", type = "info", confirmButtonText = "Understood",size = "l")
+    } else {
       user_claim_vars$user_policy_id <- input$user_policy_id
       user_claim_vars$user_claim_id <- input$user_claim_id
       user_claim_vars$user_groupings <- input$user_groupings
@@ -186,7 +187,7 @@ server <- function(input, output, session) {
       user_claim_vars$user_date_reported <- input$user_date_reported
       user_claim_vars$user_paid <- input$user_paid
       user_claim_vars$user_case <- input$user_case
-
+      
       output$assigned_variables <- renderPrint({
         list(
           user_policy_id = user_claim_vars$user_policy_id,
@@ -211,15 +212,15 @@ server <- function(input, output, session) {
           tags$h3("Step 3: Data Checks & Validations", style = title_style2),
           div(style = centre_output_style,actionButton("perform_checks", label = "Perform Data Checks", style = button_style)),
           uiOutput("conditional_checkbox")
-          )})
+        )})
       
       output$ui_2d <- renderUI({tags$hr(style = line_style)})
       
       claims_wide_(create_claims_wide(user_claims_database,user_claim_vars))
       current_positions_(claims_wide_() %>% group_by(claim_id) %>% filter(date_stamp == max(date_stamp)) %>% ungroup())
-      }
-      shinyjs::runjs("setTimeout(() => shinyjs.scrollToBottom(), 200);")
-      })
+    }
+    shinyjs::runjs("setTimeout(() => shinyjs.scrollToBottom(), 200);")
+  })
   
   
   
@@ -236,12 +237,12 @@ server <- function(input, output, session) {
       tagList(
         div(style = datatable_style2, tableOutput("validation_percent")),  
         div(style = centre_output_style,checkboxInput("show_validation_results", label = "Show Detailed Results:", value = FALSE))
-        )})
+      )})
     
     output$ui_3a <- renderUI({
       req(input$show_validation_results)
       if(input$show_validation_results == TRUE){
-          div(style = datatable_style, renderTable(validation_summary_table))
+        div(style = datatable_style, renderTable(validation_summary_table))
       }else{NULL}})
     
     shinyalert(title = "Data Checks", text = "Checks have been performed, please check the results before proceeding.", type = "info", confirmButtonText = "Understood",size = "l")
@@ -254,8 +255,8 @@ server <- function(input, output, session) {
     
     shinyjs::runjs("setTimeout(() => shinyjs.scrollToBottom(), 200);")
   })
-    
-
+  
+  
   
   # --- (UI_4) conditional UI once you click triangulate
   observeEvent(input$generate_triangles, {
@@ -287,7 +288,7 @@ server <- function(input, output, session) {
           tags$h6("Claims are categorised into open or closed based on the case estimates.", style = title_style3),
           div(style = centre_output_style, checkboxInput("overview_1_switch", label = "Show Data", value = FALSE))
         )})
-          
+      
       output$ui_4c_left <- renderUI({
         tagList(
           tags$h3("Number of Claims in Each Bucket", style = title_style2),
@@ -303,9 +304,9 @@ server <- function(input, output, session) {
           tags$h6("Each claim_id's most recent position is shown.", style = title_style3),
           div(style = centre_output_style,selectInput("basis_select_0", "Origin Basis", choices = c("underwriting","incident","reporting"), selected = "incident")),
           div(style = centre_output_style,selectInput("time_select_0", "Origin Time", choices = c("yearly","quarterly","monthly"), selected = "monthly")),
-          div(style = centre_output_style,selectInput("variable_select_0", "Select Variable", choices = c("PTOT","ITOT","NTOT","STOT"), selected = "ITOT")),
+          div(style = centre_output_style,selectInput("variable_select_0", "Select Variable", choices = c("PTOT","ITOT","NTOT","STOT","ITOT_divided_by_NTOT","PTOT_divided_by_STOT","ITOT_minus_PTOT","NTOT_minus_STOT","PTOT_divided_by_ITOT","STOT_divided_by_NTOT"), selected = "ITOT_minus_PTOT")),
           div(style = centre_output_style,checkboxInput("graph_switch_4d", label = "Show Data", value = FALSE))
-          )})
+        )})
       
       # ............
       # Triangulations
@@ -313,7 +314,7 @@ server <- function(input, output, session) {
       input_list <- lapply(1:num_inputs, function(i) {
         grouping <- user_claim_vars$user_groupings[i]
         div(style = input_list_style,selectInput(inputId = paste0("grouping_select_", i),label = paste("Select", grouping),choices = isolate(unique(claims_wide_()[[grouping]]))))
-         })
+      })
       
       output$ui_4e_left <- renderUI({
         elements <- tagList(
@@ -325,10 +326,10 @@ server <- function(input, output, session) {
         for (i in seq_along(user_claim_vars$user_groupings)) {
           grouping <- user_claim_vars$user_groupings[i]
           elements <- tagAppendChild(elements,div(style = centre_output_style,selectInput(inputId = paste0("grouping_select_", i),label = paste("Select", grouping),choices = isolate(unique(claims_wide_()[[grouping]])))))}
-          elements <- tagAppendChild(elements,div(style = centre_output_style,checkboxInput("toggle", "Remove Large Losses? (if ever)", value = FALSE)))
-          elements <- tagAppendChild(elements,conditionalPanel(condition = "input.toggle == true",div(style = centre_output_style,selectInput("user_large_loss_definition", "Large Loss Definition:", choices = c(1000, 5000, 10000, 20000, 50000, 100000, 500000), selected = 5000))))
-          elements <- tagAppendChild(elements,div(style = centre_output_style,checkboxInput("show_heatmap", "Show Data", value = FALSE)))
-          elements
+        elements <- tagAppendChild(elements,div(style = centre_output_style,checkboxInput("toggle", "Remove Large Losses? (if ever)", value = FALSE)))
+        elements <- tagAppendChild(elements,conditionalPanel(condition = "input.toggle == true",div(style = centre_output_style,selectInput("user_large_loss_definition", "Large Loss Definition:", choices = c(1000, 5000, 10000, 20000, 50000, 100000, 500000), selected = 5000))))
+        elements <- tagAppendChild(elements,div(style = centre_output_style,checkboxInput("show_heatmap", "Show Data", value = FALSE)))
+        elements
       })
       
       output$ui_4e_right_button <- renderUI({div(style = centre_output_style,actionButton("filter_triangles", label = "Explore Triangle (Click to Refresh)", style = button_style))})
@@ -371,10 +372,10 @@ server <- function(input, output, session) {
     })
     id <- showNotification("On the last leg now...", duration = NULL, type = "message")
     notification_id(id)
-    })
+  })
   
   
-
+  
   
   
   
@@ -413,7 +414,7 @@ server <- function(input, output, session) {
       shinyjs::runjs("setTimeout(function() {document.getElementById('filter_triangles').click();}, 2000);")
       button_clicked(TRUE)  
     }})
-
+  
   
   # ............
   # Overview 1
@@ -427,12 +428,12 @@ server <- function(input, output, session) {
       if(input$overview_1_switch == TRUE){
         tagList(
           div(style = datatable_style, HTML(format_overview_1(overview_1)))) } else {
-        tagList(
-          div(style = centre_graph,renderPlotly({ggplotly(overview_1_plot)})),
-          div(style = centre_graph,renderPlot({overview_1_plot_2}))
-          )}})
+            tagList(
+              div(style = centre_graph,renderPlotly({ggplotly(overview_1_plot)})),
+              div(style = centre_graph,renderPlot({overview_1_plot_2}))
+            )}})
   })
-      
+  
   
   # ............
   # Overview 2
@@ -441,33 +442,33 @@ server <- function(input, output, session) {
     user_bucket_size <- as.numeric(input$user_bucket_size)
     overview_2 <- overview_2_data(current_positions_,user_claim_vars,user_bucket_size)
     
-      output$ui_4c_right <- renderUI({
-        tagList(
-          if(input$graph_switch_4b == FALSE){
-            tagList(
-              div(style = centre_graph,renderPlotly({overview_2_graph(overview_2)})))} else {
-            tagList(
-              div(style = datatable_style, HTML(format_overview_2(overview_2))))}
-        )})
-    })
+    output$ui_4c_right <- renderUI({
+      tagList(
+        if(input$graph_switch_4b == FALSE){
+          tagList(
+            div(style = centre_graph,renderPlotly({overview_2_graph(overview_2)})))} else {
+              tagList(
+                div(style = datatable_style, HTML(format_overview_2(overview_2))))}
+      )})
+  })
   
   
   # ............
   # Overview 3
   observeEvent(list(input$basis_select_0, input$time_select_0, input$variable_select_0), {
-      req(input$basis_select_0, input$time_select_0, input$variable_select_0)
+    req(input$basis_select_0, input$time_select_0, input$variable_select_0)
     
-      triangle_name <- paste(input$basis_select_0, input$time_select_0, sep = "_")
-      variable_select <- input$variable_select_0
-      overview_3 <- overview_3_data(triangles_,triangle_name,user_claim_vars,variable_select = variable_select)
-      
-      output$ui_4d_right <- renderUI({
-          if(input$graph_switch_4d == FALSE){
-            tagList(
-                div(style = centre_graph,renderPlotly({overview_3_graph(overview_3)})))} else {
+    triangle_name <- paste(input$basis_select_0, input$time_select_0, sep = "_")
+    variable_select <- input$variable_select_0
+    overview_3 <- overview_3_data(triangles_,triangle_name,user_claim_vars,variable_select = variable_select)
+    
+    output$ui_4d_right <- renderUI({
+      if(input$graph_switch_4d == FALSE){
+        tagList(
+          div(style = centre_graph,renderPlotly({overview_3_graph(overview_3)})))} else {
             tagList(  
-                div(style = datatable_style, HTML(format_overview_3(overview_3))))}
-        })
+              div(style = datatable_style, HTML(format_overview_3(overview_3))))}
+    })
   })
   
   
@@ -510,7 +511,7 @@ server <- function(input, output, session) {
     output$ui_7a <- renderUI({tagList(renderTable({ NULL }))}) # individual output
   })
   
-
+  
   # ............
   # Explore Chunk 
   # conditional UI once you filter by origin / development
@@ -532,7 +533,30 @@ server <- function(input, output, session) {
       
       ui_db <- movement_filter(movement_,input,user_claim_vars,displayed_triangle_selections_)
       
-      output$datatable_ui_db <- renderDT({datatable(ui_db, options = list(pageLength = 10,lengthMenu = c(10, 25, 50),scrollX = TRUE))})
+      output$datatable_ui_db <- renderDT({
+            datatable(ui_db, options = list(pageLength = 10,lengthMenu = c(10, 25, 50),scrollX = TRUE)) %>%
+          #formatStyle(
+          #  c("ITOT_movement_proportion"),
+          #  background = styleColorBar(range(ui_db$ITOT_movement_proportion, na.rm = TRUE), "lightpink"),
+          #  backgroundSize = "90% 90%",
+          #  backgroundRepeat = "no-repeat",
+          #  backgroundPosition = "center"
+          #) %>%
+          #formatStyle(
+          #  c("ITOT_movement_percent"),
+          #  background = styleColorBar(range(ui_db$ITOT_movement_percent, na.rm = TRUE), "lightpink"),
+          #  backgroundSize = "90% 90%",
+          #  backgroundRepeat = "no-repeat",
+          #  backgroundPosition = "center"
+          #) %>%
+          formatStyle('ITOT_movement_proportion',background=color_from_middle(ui_db$ITOT_movement_proportion,'lightblue','lightpink')) %>%
+          formatStyle('ITOT_movement_percent',background=color_from_middle(ui_db$ITOT_movement_percent,'lightblue','lightpink')) %>%
+          formatPercentage(
+            c("ITOT_movement_proportion", "ITOT_movement_percent"), # Columns to format
+            digits = 2 # Number of decimal places
+          ) 
+      })
+      
       
       output$ui_6a <- renderUI({
         tagList(
@@ -568,11 +592,22 @@ server <- function(input, output, session) {
   # Explore Claim 
   # conditional UI once you filter by individual claim id
   observeEvent(input$find_individual_claim, {
-      
-      ui_db2 <- claims_wide_() %>% filter(claim_id == input$filter_claim_id)
-      
-      output$ui_7a <- renderUI({div(style = datatable_style, renderTable({ ui_db2 }))})
-    })
+    
+    ui_db2 <- claims_wide_() %>% filter(claim_id == input$filter_claim_id)
+    
+    ui_db2$date_issue <- as.Date(ui_db2$date_issue, origin = "1899-12-30")  # Excel uses 1900 as the origin
+    ui_db2$date_stamp <- as.Date(ui_db2$date_stamp, origin = "1899-12-30")  # Excel uses 1900 as the origin
+    ui_db2$date_incident <- as.Date(ui_db2$date_incident, origin = "1899-12-30")
+    ui_db2$date_reported <- as.Date(ui_db2$date_reported, origin = "1899-12-30")
+    
+    # Format the Date objects to 'DD/MM/YYYY' for display
+    ui_db2$date_issue <- format(ui_db2$date_issue, "%d/%m/%Y")
+    ui_db2$date_stamp <- format(ui_db2$date_stamp, "%d/%m/%Y")
+    ui_db2$date_incident <- format(ui_db2$date_incident, "%d/%m/%Y")
+    ui_db2$date_reported <- format(ui_db2$date_reported, "%d/%m/%Y")
+    
+    output$ui_7a <- renderUI({div(style = datatable_style, renderTable({ ui_db2 }))})
+  })
   
   # ............
   # Duration Calculation
@@ -595,13 +630,13 @@ server <- function(input, output, session) {
                                                               values_from = duration))))}
     })
   })
-    
+  
   # ............
   # Initial Reserve Projections
   observeEvent(list(input$time_select_res), { #,input$line_select_res
-      req(input$time_select_res,input$line_select_res)
-      
-      if(initial_reserves_counter_()>0){
+    req(input$time_select_res,input$line_select_res)
+    
+    if(initial_reserves_counter_()>0){
       shinyalert(
         title = "This will take a moment",
         text = "Please bear with us as we calculate your initial reserves.",
@@ -610,44 +645,44 @@ server <- function(input, output, session) {
         closeOnClickOutside = FALSE,
         showConfirmButton = FALSE,
         size = "l")
-        }
-      
-      time <- input$time_select_res
-      initial_plot <- initial_projections(time,user_claim_vars,triangles_,initial_reserves_,num_plots_,all_plots_)
-      
-      output$initial_projections_right <- renderUI({
-        if(input$initial_projections_switch == FALSE){
-          div(style = centre_output_style,renderPlot({all_plots_()[[input$line_select_res]]})) #, height = function() {num_plots_() * 400}
-        } else {
-          div(style = datatable_style, HTML(format_initial_reserves(initial_reserves_())))}
-      })
-      
-      if(initial_reserves_counter_()>0){runjs("swal.close();")}
-      
-      
-      #--------- THIS CLOSES THE INITIAL NON-MOVEABLE LOADING SCREEN AFTER CLICKING GENERATE TRIANGLES
-      
-      if(initial_reserves_counter_()==0){
-        runjs("swal.close();")
-        removeNotification(notification_id()) 
-        shinyalert(
-          title = "Triangulations Complete",
-          text = "Welcome to the Dashboard.<br><br>In just a moment, you will see all your claims diagnostics.<br><br>If you are enjoying this app, consider helping with its development.<br><br>Email: <a href='mailto:mark@headline-grabber.com'>mark@headline-grabber.com</a>",
-          type = "success",
-          size = "l",
-          html = TRUE)
-        }
-      
-      #---------
-      
-      initial_reserves_counter_(initial_reserves_counter_()+1)
-      
-      #---------
-      
-      
+    }
+    
+    time <- input$time_select_res
+    initial_plot <- initial_projections(time,user_claim_vars,triangles_,initial_reserves_,num_plots_,all_plots_)
+    
+    output$initial_projections_right <- renderUI({
+      if(input$initial_projections_switch == FALSE){
+        div(style = centre_output_style,renderPlot({all_plots_()[[input$line_select_res]]})) #, height = function() {num_plots_() * 400}
+      } else {
+        div(style = datatable_style, HTML(format_initial_reserves(initial_reserves_())))}
     })
+    
+    if(initial_reserves_counter_()>0){runjs("swal.close();")}
+    
+    
+    #--------- THIS CLOSES THE INITIAL NON-MOVEABLE LOADING SCREEN AFTER CLICKING GENERATE TRIANGLES
+    
+    if(initial_reserves_counter_()==0){
+      runjs("swal.close();")
+      removeNotification(notification_id()) 
+      shinyalert(
+        title = "Triangulations Complete",
+        text = "Welcome to the Dashboard.<br><br>In just a moment, you will see all your claims diagnostics.<br><br>If you are enjoying this app, consider helping with its development.<br><br>Email: <a href='mailto:mark@headline-grabber.com'>mark@headline-grabber.com</a>",
+        type = "success",
+        size = "l",
+        html = TRUE)
+    }
+    
+    #---------
+    
+    initial_reserves_counter_(initial_reserves_counter_()+1)
+    
+    #---------
+    
+    
+  })
   
-
+  
   
   # ............
   # Conditional formatting/title for the Dashboard panel BEFORE data is uploaded
@@ -667,7 +702,7 @@ server <- function(input, output, session) {
   
   # ...........................................................................................
   # IMPORTS & EXPORTS
-
+  
   # --- (import button) conditional once you upload assigned parameters - Updates selections when import csv
   observeEvent(input$variable_selections, {
     imported_data <- read.csv(input$variable_selections$datapath, stringsAsFactors = FALSE)
@@ -686,8 +721,8 @@ server <- function(input, output, session) {
   
   # --- (export button) download variable_selections
   output$download_selections <- downloadHandler(
-      filename = function() {"variable_selections.csv"},
-        content = function(file) {
+    filename = function() {"variable_selections.csv"},
+    content = function(file) {
       selected_data <- data.frame(
         user_policy_id = input$user_policy_id,
         user_claim_id = input$user_claim_id,
@@ -703,7 +738,7 @@ server <- function(input, output, session) {
       write.csv(selected_data,report_path, row.names = FALSE)
       file.copy(report_path, file)})
   
-
+  
   # --- (export button) download triangles
   output$download_triangles <- downloadHandler(
     filename = function() {"Triangles.xlsx"},
@@ -712,10 +747,10 @@ server <- function(input, output, session) {
       wb <- createWorkbook()
       triangles_names <- c("underwriting_monthly", "underwriting_quarterly", "underwriting_yearly","incident_monthly", "incident_quarterly", "incident_yearly","reporting_monthly", "reporting_quarterly", "reporting_yearly")
       for (triangle_name in triangles_names) {
-            triangle_data <- triangles_[[triangle_name]]()
-            if (!is.null(triangle_data) && nrow(triangle_data) > 0) {
-            addWorksheet(wb, sheetName = triangle_name)
-            writeData(wb, sheet = triangle_name, x = triangle_data)}}
+        triangle_data <- triangles_[[triangle_name]]()
+        if (!is.null(triangle_data) && nrow(triangle_data) > 0) {
+          addWorksheet(wb, sheetName = triangle_name)
+          writeData(wb, sheet = triangle_name, x = triangle_data)}}
       saveWorkbook(wb, temp_file, overwrite = TRUE)
       file.copy(temp_file, file, overwrite = TRUE)
     })
@@ -730,7 +765,7 @@ server <- function(input, output, session) {
     filename = function() {"variable_selections (for sample database).csv"},
     content = function(file) {file.copy("www/variable_selections (for sample database).csv", file)})
   
-
+  
   # --------------------------------------------------------------------
 } # end of server
 
