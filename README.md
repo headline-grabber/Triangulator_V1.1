@@ -12,7 +12,7 @@ Starting from scratch?
 7) Click Run-App and follow in-app Documentation
 8) Reach out if any issues
 
-Suggest feature improvements vis the Issues tab.
+Suggest feature improvements and bugs via the Issues tab. If its a bug, please provide a replicatable example if possible.
 
 V1.1 is in beta mode, there are likely errors present in some of the calculations, however testing will be performed for next versions. Version V1.1 is simply for demonstrational purposes.
 
