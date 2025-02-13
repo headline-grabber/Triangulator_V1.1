@@ -277,7 +277,7 @@ server <- function(input, output, session) {
       # Pre-processing
       assign_triangles(triangles_,user_claims_database,user_claim_vars)
       
-      output$download_triangles_button <- renderUI({div(style = centre_output_style,downloadButton("download_triangles", "Download Triangles", style = button_style3))})  
+      output$download_triangles_button <- renderUI({div(style = centre_output_style,downloadButton("download_triangles", "Download Triangles (all claims)", style = button_style3))})  
       
       # ............
       # Overviews
@@ -667,7 +667,7 @@ server <- function(input, output, session) {
       removeNotification(notification_id()) 
       shinyalert(
         title = "Triangulations Complete",
-        text = "Welcome to the Dashboard.<br><br>In just a moment, you will see all your claims diagnostics.<br><br>If you are enjoying this app, consider helping with its development.<br><br>Email: <a href='mailto:mark@headline-grabber.com'>mark@headline-grabber.com</a>",
+        text = "Welcome to the Dashboard.<br><br>In just a moment, you will see all your claims diagnostics.<br><br>If you are enjoying this app, consider helping with its development.<br><br>GitHub: <a href='https://github.com/headline-grabber/Triangulator_V1.1' target='_blank'>https://github.com/headline-grabber/Triangulator_V1.1</a>",
         type = "success",
         size = "l",
         html = TRUE)
