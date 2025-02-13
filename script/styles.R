@@ -1,6 +1,8 @@
 title_style <- "text-align: center; font-family: 'Lobster', cursive; font-size: 48px; font-weight: 400; color: #FF0000;"
 title_style2 <- "text-align: center; font: 50 30px 'Lobster', cursive; color: #444444; font-stretch: condensed;"
 title_style3 <- "text-align: center; font: normal 15px 'Playfair Display', serif; color: #444444; font-stretch: normal;"
+title_style4 <- "text-align: center; font: 50 20px 'Lobster', cursive; color: #FF0000; font-stretch: condensed;"
+
 
 button_style2 <- "background-color: #007bff; text-align: center; font-family: 'Lobster', cursive; font-size: 30px; font-weight: 400; color: white; border-radius: 5px;"
 button_style <- "background-color: #007bff; color: white; border-radius: 5px;"

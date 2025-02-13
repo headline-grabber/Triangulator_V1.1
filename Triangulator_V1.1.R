@@ -533,24 +533,28 @@ server <- function(input, output, session) {
       
       ui_db <- movement_filter(movement_,input,user_claim_vars,displayed_triangle_selections_)
       
+      ui_db_summary <- ui_db %>%
+        select(-ITOT_movement_proportion,-ITOT_movement_percent) %>%
+        summarise(across(where(is.numeric), sum, na.rm = TRUE))
+      
       output$datatable_ui_db <- renderDT({
             datatable(ui_db, options = list(pageLength = 10,lengthMenu = c(10, 25, 50),scrollX = TRUE)) %>%
-          #formatStyle(
-          #  c("ITOT_movement_proportion"),
-          #  background = styleColorBar(range(ui_db$ITOT_movement_proportion, na.rm = TRUE), "lightpink"),
-          #  backgroundSize = "90% 90%",
-          #  backgroundRepeat = "no-repeat",
-          #  backgroundPosition = "center"
-          #) %>%
-          #formatStyle(
-          #  c("ITOT_movement_percent"),
-          #  background = styleColorBar(range(ui_db$ITOT_movement_percent, na.rm = TRUE), "lightpink"),
-          #  backgroundSize = "90% 90%",
-          #  backgroundRepeat = "no-repeat",
-          #  backgroundPosition = "center"
-          #) %>%
-          formatStyle('ITOT_movement_proportion',background=color_from_middle(ui_db$ITOT_movement_proportion,'lightblue','lightpink')) %>%
-          formatStyle('ITOT_movement_percent',background=color_from_middle(ui_db$ITOT_movement_percent,'lightblue','lightpink')) %>%
+          formatStyle(
+            c("ITOT_movement_proportion"),
+            background = styleColorBar(range(ui_db$ITOT_movement_proportion, na.rm = TRUE), "lightpink"),
+            backgroundSize = "90% 50%",
+            backgroundRepeat = "no-repeat",
+            backgroundPosition = "left"
+          ) %>%
+          formatStyle(
+            c("ITOT_movement_percent"),
+            background = styleColorBar(range(ui_db$ITOT_movement_percent, na.rm = TRUE), "lightpink"),
+            backgroundSize = "90% 50%",
+            backgroundRepeat = "no-repeat",
+            backgroundPosition = "left"
+          ) %>%
+          #formatStyle('ITOT_movement_proportion',background=color_from_middle(ui_db$ITOT_movement_proportion,'lightblue','lightpink')) %>%
+          #formatStyle('ITOT_movement_percent',background=color_from_middle(ui_db$ITOT_movement_percent,'lightblue','lightpink')) %>%
           formatPercentage(
             c("ITOT_movement_proportion", "ITOT_movement_percent"), # Columns to format
             digits = 2 # Number of decimal places
@@ -558,8 +562,12 @@ server <- function(input, output, session) {
       })
       
       
+      
       output$ui_6a <- renderUI({
         tagList(
+          tags$h3("Movement Summary", style = title_style4),
+          div(style = centre_output_style, renderTable({ui_db_summary})),
+          tags$h3("Individual Claim Movements", style = title_style4),
           div(style = datatable_style, DTOutput("datatable_ui_db")),
           tags$hr(style = line_style)
         )})

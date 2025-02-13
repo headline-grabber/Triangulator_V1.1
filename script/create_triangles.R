@@ -77,9 +77,9 @@ if(basis_ == "underwriting"){basis <- "date_issue"
     mutate(development_year = index_year.y - index_year.x +1) #%>%
   
   # 6. Development To
-  db_month <- claims_database_2 %>% group_by(claim_id, stamp_month) %>% filter(row_number() == n()) %>% ungroup() %>% group_by(claim_id) %>% mutate(development_month_to = coalesce(lead(development_month), max(claims_database_2$index_month.x) - index_month.x +1)) %>% ungroup()
-  db_quarter <- claims_database_2 %>% group_by(claim_id, stamp_quarter) %>% filter(row_number() == n()) %>% ungroup() %>% group_by(claim_id) %>% mutate(development_quarter_to = coalesce(lead(development_quarter), max(claims_database_2$index_quarter.x) - index_quarter.x +1)) %>% ungroup()
-  db_year <- claims_database_2 %>% group_by(claim_id, stamp_year) %>% filter(row_number() == n()) %>% ungroup() %>% group_by(claim_id) %>% mutate(development_year_to = coalesce(lead(development_year), max(claims_database_2$index_year.x) - index_year.x +1)) %>% ungroup()
+  db_month <- claims_database_2 %>% group_by(claim_id, stamp_month) %>% filter(row_number() == n()) %>% ungroup() %>% group_by(claim_id) %>% mutate(development_month_to = coalesce(lead(development_month)-1, max(claims_database_2$index_month.x) - index_month.x +1)) %>% ungroup()
+  db_quarter <- claims_database_2 %>% group_by(claim_id, stamp_quarter) %>% filter(row_number() == n()) %>% ungroup() %>% group_by(claim_id) %>% mutate(development_quarter_to = coalesce(lead(development_quarter)-1, max(claims_database_2$index_quarter.x) - index_quarter.x +1)) %>% ungroup()
+  db_year <- claims_database_2 %>% group_by(claim_id, stamp_year) %>% filter(row_number() == n()) %>% ungroup() %>% group_by(claim_id) %>% mutate(development_year_to = coalesce(lead(development_year)-1, max(claims_database_2$index_year.x) - index_year.x +1)) %>% ungroup()
   
   
   
