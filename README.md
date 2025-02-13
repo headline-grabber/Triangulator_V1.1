@@ -17,10 +17,11 @@ Suggest feature improvements and bugs via the Issues tab. If its a bug, please p
 V1.1 is in beta mode, there are likely errors present in some of the calculations, however testing will be performed for next versions. Version V1.1 is simply for demonstrational purposes.
 
 Areas to be improved?
-1) Documentation of approach
-2) Tidy up of code to ensure easy modularity and testing of new features
-3) Bug testing
-4) Additional data checks for real world data
-5) Speed
+1) Validation/Checks on sample data to be included for download
+2) Documentation of approach
+3) Tidy up of code to ensure easy modularity and testing of new features
+4) Bug testing
+5) Additional data checks for real world data
+6) Speed
 
 Use at your own risk.
